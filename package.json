@@ -1,0 +1,15 @@
+{
+  "name": "signalhead",
+  "version": "1.0.0",
+  "description": "Signal indicator service accessible through websockets.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jenifer Champagne",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^7.0.0"
+  }
+}

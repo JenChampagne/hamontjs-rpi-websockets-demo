@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Demo</title>
+    <style>
+    section {
+        padding: 10px;
+        margin: 10px;
+    }
+    section#input {
+        text-align: center;
+    }
+    </style>
+</head>
+<body>
+    <section id="input">
+        <input type="button" onclick="connect()" value="Connect to the Signal">
+        <input type="button" onclick="disconnect()" value="Disconnect from the Signal">
+        <hr>
+        <input type="button" onclick="set('red', true)" value="Turn Red On">
+        <input type="button" onclick="set('red', false)" value="Turn Red Off">
+        <input type="button" onclick="get('red')" value="Get Red Status">
+        <br>
+        <input type="button" onclick="set('yellow', true)" value="Turn Yellow On">
+        <input type="button" onclick="set('yellow', false)" value="Turn Yellow Off">
+        <input type="button" onclick="get('yellow')" value="Get Yellow Status">
+        <br>
+        <input type="button" onclick="set('green', true)" value="Turn Green On">
+        <input type="button" onclick="set('green', false)" value="Turn Green Off">
+        <input type="button" onclick="get('green')" value="Get Green Status">
+    </section>
+    <section id="output">
+        <ul id="logs"></ul>
+    </section>
+    <script type = "text/javascript">
+    const remoteAddress = 'ws://192.168.50.196:8080';
+
+    let remoteConnection = null;
+    let logElement = document.getElementById('logs');
+
+    const log = (message) => {
+        logElement.innerHTML = `<li>${message}</li>${logElement.innerHTML}`;
+    };
+
+    const get = (lightName) => {
+        const message = {
+            action: 'get',
+            target: lightName
+        };
+        remoteConnection.send(JSON.stringify(message));
+    };
+
+    const set = (lightName, state) => {
+        const message = {
+            action: 'set',
+            target: lightName,
+            value: state
+        };
+        remoteConnection.send(JSON.stringify(message));
+    };
+
+    const connect = () => {
+        if (!('WebSocket' in window)) {
+            log('WebSocket NOT supported by your Browser!  (ノಠ益ಠ)ノ彡┻━┻');
+            return;
+        }
+        
+        log(`Connecting to ${remoteAddress}`);
+        const ws = new WebSocket(remoteAddress);
+
+        ws.onopen = (event) => {
+            log(`Successfully connected to ${remoteAddress}  \\( ﾟヮﾟ)/`);
+            remoteConnection = ws;
+        };
+
+        ws.onclose = (event) => {
+            log(`Disconnected from ${remoteAddress}  ¯\\(°_o)/¯`);
+            remoteConnection = null;
+        };
+
+        ws.onmessage = (event) => {
+            log(`Received "${event.data}" from the signal  ◕_◕`);
+        };
+    };
+
+    const disconnect = () => {
+        log(`Successfully disconnected from ${remoteAddress}  ( * ^ *) ノシ`);
+        remoteConnection.close();
+    };
+    </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+[Service]
+WorkingDirectory=/home/pi/projects/signalhead
+ExecStart=node /home/pi/projects/signalhead/src/server.js
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=signalhead
+User=pi
+Group=pi
+Environment=NODE_ENV=production
+
+[Install]
